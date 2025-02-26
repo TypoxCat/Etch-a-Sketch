@@ -1,10 +1,16 @@
 const containers = document.querySelector(".container");
 let hovering = true;
+let random = false;
+let opacity = false;
+var darkness = 0;
+let erase = false;
 const features = document.createElement("div");
+features.classList.add("features");
 containers.appendChild(features);
 
 //drawing pad
 const drawingPad = document.createElement("div");
+drawingPad.classList.add("pad");
 containers.appendChild(drawingPad);
 drawingPad.style.width = "600px";
 drawingPad.style.height = "600px";
@@ -18,20 +24,52 @@ drawingPad.style.flexDirection = "column";
 
 //setNewSize
 const gridSizes = document.createElement("div");
-let sizes = 16; 
-gridSizes.textContent = "Grid size: " + sizes;
+let size = 16; 
+gridSizes.textContent = "Grid size: " + size;
 const iptSize = document.createElement("input");
+iptSize.setAttribute("placeholder", "Please input 1-100")
 features.appendChild(gridSizes);
 features.appendChild(iptSize);
 iptSize.addEventListener("change", () => {
-    sizes = iptSize.value;
-    if (sizes <= 100){
+    size = iptSize.value;
+    if (size <= 100){
         removeGrid();
-        newGrid(sizes);
+        newGrid(size);
     } else {
         alert("Sorry we only allow up to 100");
     }
-    gridSizes.textContent = "Grid size:" + sizes;
+    gridSizes.textContent = "Grid size: " + size;
+})
+
+//color change
+const colors = document.createElement("input");
+colors.type = 'color';
+colors.setAttribute("value", "black");
+var userColor = colors.value;
+features.appendChild(colors);
+colors.addEventListener("change", () =>{
+    userColor = colors.value;
+    random = false;
+})
+const randomColor = document.createElement("button");
+randomColor.textContent = "Random color";
+features.appendChild(randomColor);
+randomColor.addEventListener("click", () => {
+    random =!random;
+})
+const gradient = document.createElement("button");
+gradient.textContent = "Gradient";
+features.appendChild(gradient);
+gradient.addEventListener("click", () => {
+    opacity =!opacity;
+})
+
+//eraser
+const eraser = document.createElement("button");
+eraser.textContent = "Eraser";
+features.appendChild(eraser);
+eraser.addEventListener("click", () => {
+    erase =! erase;
 })
 
 //reset
@@ -41,16 +79,6 @@ features.appendChild(reset);
 reset.addEventListener("click", () => {
     resetPixels();
 })
- 
-//color change
-const colors = document.createElement("input");
-colors.type = 'color';
-colors.setAttribute("value", "black");
-var userColor = colors.value;
-features.appendChild(colors);
-colors.addEventListener("change", () =>{
-    userColor = colors.value;
-})
 
 //pause
 const pause = document.createElement("button");
@@ -58,10 +86,14 @@ pause.textContent = "Pause";
 features.appendChild(pause);
 pause.addEventListener("click", () => {
     hovering =!hovering;
+    if (hovering){
+        pause.textContent = "Pause";
+    } else{
+        pause.textContent = "Continue";
+    }
 })
 
 // coloring grid
-let size = 16;
 newGrid(size);
 
 function newGrid(size){
@@ -95,10 +127,33 @@ function newGrid(size){
     const pixels = document.querySelectorAll(".px");
     pixels.forEach((pixels) => pixels.addEventListener("mouseover", () => {
         if (hovering){
-            pixels.style.backgroundColor = userColor;
+            if (random){
+                userColor = randomizeColor();   
+            }
+            if (opacity){
+                if(darkness >= 100){
+                    darkness = 0;
+                }
+                darkness += 10;
+                pixels.style.opacity = darkness/100; 
+            }
+            if (erase){
+                userColor = "white";
+            }
+            pixels.style.backgroundColor = userColor;    
         }
     }))
 }
+
+function randomizeColor(){
+    var letters = '0123456789ABCDEF';
+    var color = '#';
+    for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+    } 
+    return color;
+}
+
 
 function removeGrid(){
     const grid = document.querySelectorAll(".row");
@@ -110,6 +165,7 @@ function removeGrid(){
 function resetPixels() {
     const pixels = document.querySelectorAll(".px");
     pixels.forEach((pixels) => {
-        pixels.style.backgroundColor = "transparent";
+        pixels.style.opacity = 1;
+        pixels.style.backgroundColor = "white";
     }
 )}
