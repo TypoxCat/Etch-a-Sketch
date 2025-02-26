@@ -56,12 +56,14 @@ randomColor.textContent = "Random color";
 features.appendChild(randomColor);
 randomColor.addEventListener("click", () => {
     random =!random;
+    erase = false;
 })
 const gradient = document.createElement("button");
 gradient.textContent = "Gradient";
 features.appendChild(gradient);
 gradient.addEventListener("click", () => {
     opacity =!opacity;
+    erase = false;
 })
 
 //eraser
@@ -133,8 +135,6 @@ function newGrid(size){
                 userColor = "white";
                 pixels.style.opacity = 1;
                 darkness = 0;
-            } else {
-                userColor = "black";
             }
             if (random){
                 userColor = randomizeColor();   
