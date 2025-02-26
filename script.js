@@ -50,6 +50,8 @@ features.appendChild(colors);
 colors.addEventListener("change", () =>{
     userColor = colors.value;
     random = false;
+    erase = false;
+    opacity = false;
 })
 const randomColor = document.createElement("button");
 randomColor.textContent = "Random color";
@@ -135,7 +137,7 @@ function newGrid(size){
                 userColor = "white";
                 pixels.style.opacity = 1;
                 darkness = 0;
-            }
+            } else
             if (random){
                 userColor = randomizeColor();   
             }
@@ -145,6 +147,8 @@ function newGrid(size){
                 }
                 darkness += 10;
                 pixels.style.opacity = darkness/100; 
+            } else {
+                pixels.style.opacity = 1;
             }
             pixels.style.backgroundColor = userColor;    
         }
