@@ -69,7 +69,7 @@ const eraser = document.createElement("button");
 eraser.textContent = "Eraser";
 features.appendChild(eraser);
 eraser.addEventListener("click", () => {
-    erase =! erase;
+    erase =!erase;
 })
 
 //reset
@@ -127,18 +127,24 @@ function newGrid(size){
     const pixels = document.querySelectorAll(".px");
     pixels.forEach((pixels) => pixels.addEventListener("mouseover", () => {
         if (hovering){
+            if (erase){
+                opacity = false;
+                random = false;
+                userColor = "white";
+                pixels.style.opacity = 1;
+                darkness = 0;
+            } else {
+                userColor = "black";
+            }
             if (random){
                 userColor = randomizeColor();   
             }
             if (opacity){
-                if(darkness >= 100){
+                if(darkness == 100){
                     darkness = 0;
                 }
                 darkness += 10;
                 pixels.style.opacity = darkness/100; 
-            }
-            if (erase){
-                userColor = "white";
             }
             pixels.style.backgroundColor = userColor;    
         }
